@@ -27,7 +27,8 @@
 
 /************** MAC Policy Handlers **************/
 
-static int is_file_accessible(struct vnode *vp)
+static int
+is_file_accessible(struct vnode *vp)
 {
     const char *vname = NULL;
     char cbuf[MAXCOMLEN+1];
@@ -59,7 +60,8 @@ static int is_file_accessible(struct vnode *vp)
 
 static int mac_policy_open(
                            kauth_cred_t cred,
-                           struct vnode *vp, struct label *label,
+                           struct vnode *vp,
+                           struct label *label,
                            int acc_mode)
 {
     return is_file_accessible(vp);
@@ -88,15 +90,15 @@ mac_policy_initbsd(struct mac_policy_conf *mpc)
 // Filling the structure with the pointers to callback functions.
 static struct mac_policy_ops mac_ops ={
     .mpo_policy_initbsd  = mac_policy_initbsd,    // Policy initialization
-    .mpo_vnode_check_open = mac_policy_open,      // Policy initialization
+    .mpo_vnode_check_open = mac_policy_open,      // File open handler
     .mpo_vnode_check_unlink = mac_policy_unlink,  // File deletion handler
 };
 
 // Filling the structure with information on our policy
 static struct mac_policy_conf mac_policy_conf =
 {
-    .mpc_name         = "protect_demo",
-    .mpc_fullname       = "Protect demo!",
+    .mpc_name         = "machmac",
+    .mpc_fullname       = "MAC on Mac",
     .mpc_labelnames     = NULL,
     .mpc_labelname_count  = 0,
     .mpc_ops        = &mac_ops,
